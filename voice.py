@@ -3,13 +3,12 @@ import speech_recognition as sr
 
 def transcribe_speech(api_choice, language):
     r = sr.Recognizer()
+    st.info("Veuillez parler maintenant...")  # Message affiché une seule fois
     with sr.Microphone() as source:
-        st.info("Veuillez parler maintenant...")
         try:
-            audio_text = r.listen(source, timeout=10)  # Limite de 10 secondes pour écouter
-            st.info("Transcription en cours...")
-            
-            # Choix de l'API en fonction de l'option utilisateur
+            audio_text = r.listen(source, timeout=10)
+            st.info("Transcription en cours...")  # Stable, pas dans une boucle rapide
+
             if api_choice == "Google":
                 text = r.recognize_google(audio_text, language=language)
             elif api_choice == "Sphinx":
@@ -19,13 +18,13 @@ def transcribe_speech(api_choice, language):
             
             return text
         except sr.WaitTimeoutError:
-            return "Temps d'attente dépassé. Veuillez réessayer!"
+            st.warning("Temps d'attente dépassé. Veuillez réessayer.")
         except sr.UnknownValueError:
-            return "Je n'ai pas compris ce que vous avez dit. Essayez à nouveau!"
+            st.warning("Je n'ai pas compris ce que vous avez dit. Essayez à nouveau.")
         except sr.RequestError as e:
-            return f"Erreur de l'API : {str(e)}"
+            st.error(f"Erreur de l'API : {str(e)}")
         except Exception as e:
-            return f"Une erreur inattendue s'est produite : {str(e)}"
+            st.error(f"Une erreur inattendue s'est produite : {str(e)}")
 
 def save_transcription(text):
     with open("transcription.txt", "w", encoding="utf-8") as file:
