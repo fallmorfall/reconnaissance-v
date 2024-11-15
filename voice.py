@@ -1,5 +1,4 @@
 import streamlit as st
-import pyaudio
 import speech_recognition as sr
 
 def transcribe_speech(api_choice, language):
